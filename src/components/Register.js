@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Container, Card, CardContent, makeStyles, Grid, TextField, Button } from '@material-ui/core';
+import { makeStyles, TextField, Button } from '@material-ui/core';
 import QRcode from 'qrcode';
+import Typography from '@mui/material/Typography';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 
 
 const Register = () => {
 
   const [text, setText] = useState('');
-  const [sequence, setSequence] = useState('Download QR Code');
   const [ImgURL, setImgURL] = useState('');
   const [StudentDetails, setStudentDetails] = useState({
     fullname: '',
@@ -15,45 +16,36 @@ const Register = () => {
   });
 
   const classes = useStyles();
-
+ 
   const handleStudentDetailsForm = (event) => {
     const { name, value } = event.target;
     setStudentDetails(prevState => ({
       ...prevState,
       [name]: value
     }));
-
+    setText(StudentDetails.fullname + ' ' + StudentDetails.sid + ' ' + StudentDetails.pog);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      setText(StudentDetails.fullname + ' ' + StudentDetails.sid + ' ' + StudentDetails.pog);
-      
-      const response = await QRcode.toDataURL(text);
-      setImgURL(response);
-      console.log(ImgURL);
 
-      console.log((StudentDetails.fullname + ' ' + StudentDetails.sid + ' ' + StudentDetails.pog));
+    if (StudentDetails.fullname && StudentDetails.sid && StudentDetails.pog) {
+      try {
 
 
-    } catch (error) {
-      console.log(error);
+        const response = await QRcode.toDataURL(text);
+        setImgURL(response);
+        console.log(ImgURL);
+
+        console.log((StudentDetails.fullname + ' ' + StudentDetails.sid + ' ' + StudentDetails.pog));
+
+
+      } catch (error) {
+        console.log(error);
+      }
     }
+
   };
-
-
-
-
-  // const genQRcode = async () => {
-  //   try {
-  //     const response = await QRcode.toDataURL(text);
-  //     setImgURL(response);
-  //     console.log(ImgURL);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
 
   return (
     <>
@@ -77,16 +69,17 @@ const Register = () => {
           </form>
         </div>
 
-        <div style={{
+        <div  style={{
           width: '30%',
           marginLeft: '5%',
-          marginTop: '2%'
+          marginTop: '2%',
+          border: '1px solid lightgray',
+          alignContent: 'center',
+          alignItems: 'center',
+          padding: '2%'
         }}>
-          {ImgURL ? (<> <Button className={classes.btn}  variant='contained' color='primary' href={ImgURL} download={StudentDetails.sid + '.png'}>{sequence} </Button> <br />   <img className={classes.QRcode} src={ImgURL} alt={ImgURL} />  </>) : null}
+          {ImgURL ? (<> <Button className={classes.btnCloud} variant='outlined' color='success' href={ImgURL} download={StudentDetails.sid + '.png'}>Download<CloudDownloadIcon style={{marginLeft: '10%', float: 'right'}} fontSize='large'/></Button> <br />   <img className={classes.QRcode} src={ImgURL} alt={ImgURL} />  <br /> </>) : null}
         </div>
-
-
-
 
       </div>
     </>
@@ -118,6 +111,10 @@ const useStyles = makeStyles(() => ({
   },
   wrapper: {
     display: 'flex'
+  },
+  btnCloud: {
+    width: '100%',
+    margin: '0 auto'
   }
 }));
 

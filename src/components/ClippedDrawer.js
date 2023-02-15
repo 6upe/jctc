@@ -23,7 +23,7 @@ const drawerWidth = 240;
 export default function ClippedDrawer({Page}) {
   const navLinks = [
     {
-      name: 'Start Register',
+      name: 'Mark Attendance',
       path: '/',
       icon: <HowToRegOutlinedIcon />
     },
